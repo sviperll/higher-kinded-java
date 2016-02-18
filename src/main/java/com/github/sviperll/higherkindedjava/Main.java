@@ -27,11 +27,11 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.sviperll.higherkindedjava.util;
 
+package com.github.sviperll.higherkindedjava;
+
+import com.github.sviperll.higherkindedjava.util.Monad;
 import com.github.sviperll.higherkindedjava.util.generic.Self;
-import com.github.sviperll.higherkindedjava.util.generic.Type;
-import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -39,18 +39,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author Victor Nazarov &lt;asviraspossible@gmail.com&gt;
  */
 @ParametersAreNonnullByDefault
-public interface Monad<CA extends Monad<CA, ? extends CA, ?>, CAT extends Monad<CA, CAT, T>, T>
-        extends Functor<CA, CAT, T> {
-    public Util<CA> monad();
-
-    default <CAAU extends Monad<CA, CAAU, CAU>, CAU extends Monad<CA, CAU, U>, U> Self<CAU> flatMapGeneric(Function<T, CAU> f) {
-        return monad().<CAAU, CAU, U>join(this.<CAAU, CAU>mapGeneric(f).self());
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> list = Main.<List<?>, List<Integer>>unitOne(List.MONAD).self();
+        Optional<Integer> optional = Main.<Optional<?>, Optional<Integer>>unitOne(Optional.MONAD).self();
+        System.out.println(list);
+        System.out.println(optional);
     }
 
-    public interface Util<CA extends Monad<CA, ? extends CA, ?>> {
-        <CAT extends Monad<CA, CAT, T>, T> Self<CAT> unit(T value);
-        default <CAAT extends Monad<CA, CAAT, CAT>, CAT extends Monad<CA, CAT, T>, T> Self<CAT> join(CAAT values) {
-            return values.flatMapGeneric(Function.identity());
-        }
+    static <CA extends Monad<CA, ? extends CA, ?>, CAT extends Monad<CA, CAT, Integer>>
+    Self<CAT> unitOne(Monad.Util<CA> monad) {
+        return monad.unit(1);
     }
 }

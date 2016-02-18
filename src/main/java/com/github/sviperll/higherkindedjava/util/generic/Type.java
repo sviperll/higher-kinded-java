@@ -50,12 +50,12 @@ public class Type {
             return INSTANCE;
         }
 
-        public static <C extends Constructor<C, CA>, CA extends ConstructorApplication<C, CA, ? extends CA, ?>, V extends ConstructorApplication<C, CA, V, T>, W extends ConstructorApplication<C, CA, W, T>, T> Equality<V, W> obviousForConstructorApplication() {
-            return Equality.<T>obvious().<C, CA, V, W>toTypeConstructorApplication();
+        public static <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, W extends ConstructorApplication<CA, W, T>, T> Equality<V, W> obviousForConstructorApplication() {
+            return Equality.<T>obvious().<CA, V, W>toTypeConstructorApplication();
         }
 
         @SuppressWarnings("unchecked")
-        public static <C extends Constructor<C, CA>, CA extends ConstructorApplication<C, CA, ? extends CA, ?>, T, U, V extends ConstructorApplication<C, CA, V, T>, W extends ConstructorApplication<C, CA, W, U>> Equality<T, U> fromTypeConstructorApplication(Equality<V, W> evidence) {
+        public static <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, T, W extends ConstructorApplication<CA, W, U>, U> Equality<T, U> fromTypeConstructorApplication(Equality<V, W> evidence) {
             return INSTANCE;
         }
 
@@ -78,17 +78,12 @@ public class Type {
         }
 
         @SuppressWarnings("unchecked")
-        public <C extends Constructor<C, CA>, CA extends ConstructorApplication<C, CA, ? extends CA, ?>, V extends ConstructorApplication<C, CA, V, T>, W extends ConstructorApplication<C, CA, W, U>> Equality<V, W> toTypeConstructorApplication() {
+        public <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, W extends ConstructorApplication<CA, W, U>> Equality<V, W> toTypeConstructorApplication() {
             return INSTANCE;
         }
     }
 
-    public static abstract class Constructor<C extends Constructor<C, CA>, CA extends ConstructorApplication<C, CA, ? extends CA, ?>> {
-        protected Constructor(Constructor<C, CA> instance) {
-            throw new IllegalStateException("Type.Constructor should never be instanciated");
-        }
+    public interface ConstructorApplication<CA extends ConstructorApplication<CA, ? extends CA, ?>, CAT extends ConstructorApplication<CA, CAT, T>, T> extends Self<CAT> {
     }
 
-    public interface ConstructorApplication<C extends Constructor<C, CA>, CA extends ConstructorApplication<C, CA, ? extends CA, ?>, CAT extends ConstructorApplication<C, CA, CAT, T>, T> {
-    }
 }

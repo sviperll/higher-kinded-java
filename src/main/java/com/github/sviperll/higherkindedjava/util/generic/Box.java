@@ -27,30 +27,33 @@
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.github.sviperll.higherkindedjava.util;
 
-import com.github.sviperll.higherkindedjava.util.generic.Self;
-import com.github.sviperll.higherkindedjava.util.generic.Type;
-import java.util.function.Function;
+package com.github.sviperll.higherkindedjava.util.generic;
+
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 
 /**
  *
  * @author Victor Nazarov &lt;asviraspossible@gmail.com&gt;
  */
-@ParametersAreNonnullByDefault
-public interface Monad<CA extends Monad<CA, ? extends CA, ?>, CAT extends Monad<CA, CAT, T>, T>
-        extends Functor<CA, CAT, T> {
-    public Util<CA> monad();
+public class Box<T> implements Self<Box<T>> {
 
-    default <CAAU extends Monad<CA, CAAU, CAU>, CAU extends Monad<CA, CAU, U>, U> Self<CAU> flatMapGeneric(Function<T, CAU> f) {
-        return monad().<CAAU, CAU, U>join(this.<CAAU, CAU>mapGeneric(f).self());
+    private final T value;
+    private final Type outer;
+
+    public Box(T value, final Type outer) {
+        this.outer = outer;
+        this.value = value;
     }
 
-    public interface Util<CA extends Monad<CA, ? extends CA, ?>> {
-        <CAT extends Monad<CA, CAT, T>, T> Self<CAT> unit(T value);
-        default <CAAT extends Monad<CA, CAAT, CAT>, CAT extends Monad<CA, CAT, T>, T> Self<CAT> join(CAAT values) {
-            return values.flatMapGeneric(Function.identity());
-        }
+    public T get() {
+        return value;
     }
+
+    @Override
+    public Box<T> self() {
+        return this;
+    }
+
 }

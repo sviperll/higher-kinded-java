@@ -46,10 +46,13 @@ import java.util.function.Function;
  */
 @WrapsGeneratedValueClass(visitor = List.ListVisitor.class)
 public class List<T> extends ListBase<T>
-        implements Type.ConstructorApplication<List.TypeConstructor, List<?>, List<T>, T>,
-        Monad<List.TypeConstructor, List<?>, List<T>, T> {
-    public static <CAT extends Monad<TypeConstructor, List<?>, CAT, T>, T> List<T> fromGeneric(CAT value) {
-        return Type.Equality.<TypeConstructor, List<?>, List<T>, CAT, T>obviousForConstructorApplication().cast(value);
+        implements Type.ConstructorApplication<List<?>, List<T>, T>,
+        Monad<List<?>, List<T>, T> {
+
+    public static final Monad.Util<List<?>> MONAD = ListMonad.INSTANCE;
+
+    public static <CAT extends Monad<List<?>, CAT, T>, T> List<T> fromGeneric(CAT value) {
+        return Type.Equality.<List<?>, List<T>, CAT, T>obviousForConstructorApplication().cast(value);
     }
 
     public static <T> List<T> join(List<List<T>> lists) {
@@ -98,18 +101,23 @@ public class List<T> extends ListBase<T>
         });
     }
 
-    <CAT extends Type.ConstructorApplication<TypeConstructor, List<?>, CAT, T>> CAT toGeneric() {
-        return Type.Equality.<TypeConstructor, List<?>, CAT, List<T>, T>obviousForConstructorApplication().cast(this);
+    <CAT extends Type.ConstructorApplication<List<?>, CAT, T>> CAT toGeneric() {
+        return Type.Equality.<List<?>, CAT, List<T>, T>obviousForConstructorApplication().cast(this);
     }
 
     @Override
-    public <CAU extends Functor<TypeConstructor, List<?>, CAU, U>, U> CAU mapGeneric(Function<T, U> f) {
+    public <CAU extends Functor<List<?>, CAU, U>, U> CAU mapGeneric(Function<T, U> f) {
         return map(f).<CAU>toGeneric();
     }
 
     @Override
-    public Monad.Util<TypeConstructor, List<?>> monad() {
+    public Monad.Util<List<?>> monad() {
         return ListMonad.INSTANCE;
+    }
+
+    @Override
+    public List<T> self() {
+        return this;
     }
 
     @GenerateValueClassForVisitor(wrapperClass = List.class)
@@ -119,26 +127,20 @@ public class List<T> extends ListBase<T>
         R prepend(@Getter @Updater T head, @Getter @Updater List<T> tail);
     }
 
-    private static enum ListMonad implements Monad.Util<TypeConstructor, List<?>> {
+    private static enum ListMonad implements Monad.Util<List<?>> {
         INSTANCE;
         @Override
-        public <CAT extends Monad<TypeConstructor, List<?>, CAT, T>, T> CAT unit(T value) {
+        public <CAT extends Monad<List<?>, CAT, T>, T> CAT unit(T value) {
             return List.prepend(value, List.empty()).toGeneric();
         }
         @Override
-        public <CAAT extends Monad<TypeConstructor, List<?>, CAAT, CAT>, CAT extends Monad<TypeConstructor, List<?>, CAT, T>, T> CAT join(CAAT values) {
-            Type.Equality<CAAT, List<CAT>> equality1 = Type.Equality.<TypeConstructor, List<?>, CAAT, List<CAT>, CAT>obviousForConstructorApplication();
-            Type.Equality<CAT, List<T>> equality2 = Type.Equality.<TypeConstructor, List<?>, CAT, List<T>, T>obviousForConstructorApplication();
-            Type.Equality<List<CAT>, List<List<T>>> equality3 = equality2.<TypeConstructor, List<?>, List<CAT>, List<List<T>>>toTypeConstructorApplication();
+        public <CAAT extends Monad<List<?>, CAAT, CAT>, CAT extends Monad<List<?>, CAT, T>, T> CAT join(CAAT values) {
+            Type.Equality<CAAT, List<CAT>> equality1 = Type.Equality.<List<?>, CAAT, List<CAT>, CAT>obviousForConstructorApplication();
+            Type.Equality<CAT, List<T>> equality2 = Type.Equality.<List<?>, CAT, List<T>, T>obviousForConstructorApplication();
+            Type.Equality<List<CAT>, List<List<T>>> equality3 = equality2.<List<?>, List<CAT>, List<List<T>>>toTypeConstructorApplication();
             Type.Equality<CAAT, List<List<T>>> equality4 = equality1.merge(equality3);
             return equality2.cast(List.join(equality4.reverse().cast(values)));
         }
 
-    }
-
-    public abstract static class TypeConstructor extends Type.Constructor<TypeConstructor, List<?>> {
-        TypeConstructor(TypeConstructor instance) {
-            super(instance);
-        }
     }
 }

@@ -30,6 +30,7 @@
 
 package com.github.sviperll.higherkindedjava.util;
 
+import com.github.sviperll.higherkindedjava.util.generic.Self;
 import com.github.sviperll.higherkindedjava.util.generic.Type;
 import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,7 +41,7 @@ import javax.annotation.Nonnull;
  * @author Victor Nazarov &lt;asviraspossible@gmail.com&gt;
  */
 @ParametersAreNonnullByDefault
-public interface Functor<C extends Type.Constructor<C, CA>, CA extends Functor<C, CA, ? extends CA, ?>, CAT extends Functor<C, CA, CAT, T>, T>
-        extends Type.ConstructorApplication<C, CA, CAT, T> {
-    <CAU extends Functor<C, CA, CAU, U>, U> CAU mapGeneric(Function<T, U> f);
+public interface Functor<CA extends Functor<CA, ? extends CA, ?>, CAT extends Functor<CA, CAT, T>, T>
+        extends Type.ConstructorApplication<CA, CAT, T> {
+    <CAU extends Functor<CA, CAU, U>, U> Self<CAU> mapGeneric(Function<T, U> f);
 }
