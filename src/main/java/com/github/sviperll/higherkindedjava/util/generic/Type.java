@@ -30,6 +30,7 @@
 
 package com.github.sviperll.higherkindedjava.util.generic;
 
+import com.github.sviperll.higherkindedjava.Optional;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -41,25 +42,25 @@ public class Type {
     private Type() {
     }
 
-    public static class Equality<T, U> {
+    public static class Eq<T, U> {
         @SuppressWarnings("rawtypes")
-        private static final Equality INSTANCE = new Equality();
+        private static final Eq INSTANCE = new Eq();
 
         @SuppressWarnings("unchecked")
-        public static <T> Equality<T, T> obvious() {
+        public static <T> Eq<T, T> obvious() {
             return INSTANCE;
         }
 
-        public static <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, W extends ConstructorApplication<CA, W, T>, T> Equality<V, W> obviousForConstructorApplication() {
-            return Equality.<T>obvious().<CA, V, W>toTypeConstructorApplication();
+        public static <CA extends App<CA, ? extends CA, ?>, V extends App<CA, V, T>, W extends App<CA, W, T>, T> Eq<V, W> obviousForConstructorApplication() {
+            return Eq.<T>obvious().<CA, V, W>toTypeConstructorApplication();
         }
 
         @SuppressWarnings("unchecked")
-        public static <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, T, W extends ConstructorApplication<CA, W, U>, U> Equality<T, U> fromTypeConstructorApplication(Equality<V, W> evidence) {
+        public static <CA extends App<CA, ? extends CA, ?>, V extends App<CA, V, T>, T, W extends App<CA, W, U>, U> Eq<T, U> fromTypeConstructorApplication(Eq<V, W> evidence) {
             return INSTANCE;
         }
 
-        private Equality() {
+        private Eq() {
         }
 
         @SuppressWarnings("unchecked")
@@ -68,22 +69,26 @@ public class Type {
         }
 
         @SuppressWarnings("unchecked")
-        public Equality<U, T> reverse() {
+        public Eq<U, T> reverse() {
             return INSTANCE;
         }
 
         @SuppressWarnings("unchecked")
-        public <V> Equality<T, V> merge(Equality<U, V> evidence) {
+        public <V> Eq<T, V> merge(Eq<U, V> evidence) {
             return INSTANCE;
         }
 
         @SuppressWarnings("unchecked")
-        public <CA extends ConstructorApplication<CA, ? extends CA, ?>, V extends ConstructorApplication<CA, V, T>, W extends ConstructorApplication<CA, W, U>> Equality<V, W> toTypeConstructorApplication() {
+        public <CA extends App<CA, ? extends CA, ?>, V extends App<CA, V, T>, W extends App<CA, W, U>> Eq<V, W> toTypeConstructorApplication() {
             return INSTANCE;
         }
     }
 
-    public interface ConstructorApplication<CA extends ConstructorApplication<CA, ? extends CA, ?>, CAT extends ConstructorApplication<CA, CAT, T>, T> extends Self<CAT> {
+    public interface App<CA extends App<CA, ? extends CA, ?>, CAT extends App<CA, CAT, T>, T> {
+        @SuppressWarnings("unchecked")
+        default CAT castToType() {
+            return (CAT)this;
+        }
     }
 
 }

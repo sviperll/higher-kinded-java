@@ -31,7 +31,7 @@
 package com.github.sviperll.higherkindedjava;
 
 import com.github.sviperll.higherkindedjava.util.Monad;
-import com.github.sviperll.higherkindedjava.util.generic.Self;
+import com.github.sviperll.higherkindedjava.util.generic.Type;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -41,14 +41,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class Main {
     public static void main(String[] args) {
-        List<Integer> list = Main.<List<?>, List<Integer>>unitOne(List.MONAD).self();
-        Optional<Integer> optional = Main.<Optional<?>, Optional<Integer>>unitOne(Optional.MONAD).self();
+        List<Integer> list = Main.<List<?>, List<Integer>>unitOne(List.MONAD).castToType();
+        Optional<Integer> optional = Main.<Optional<?>, Optional<Integer>>unitOne(Optional.MONAD).castToType();
         System.out.println(list);
         System.out.println(optional);
     }
 
     static <CA extends Monad<CA, ? extends CA, ?>, CAT extends Monad<CA, CAT, Integer>>
-    Self<CAT> unitOne(Monad.Util<CA> monad) {
+    Type.App<CA, CAT, Integer> unitOne(Monad.Util<CA> monad) {
         return monad.unit(1);
     }
 }

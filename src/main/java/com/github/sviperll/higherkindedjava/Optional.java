@@ -37,7 +37,6 @@ import com.github.sviperll.adt4j.Visitor;
 import com.github.sviperll.adt4j.WrapsGeneratedValueClass;
 import com.github.sviperll.higherkindedjava.util.Functor;
 import com.github.sviperll.higherkindedjava.util.Monad;
-import com.github.sviperll.higherkindedjava.util.generic.Self;
 import com.github.sviperll.higherkindedjava.util.generic.Type;
 import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -49,22 +48,17 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @WrapsGeneratedValueClass(visitor = Optional.OptionalVisitor.class)
 public class Optional<T> extends OptionalBase<T>
-        implements Type.ConstructorApplication<Optional<?>, Optional<T>, T>,
+        implements Type.App<Optional<?>, Optional<T>, T>,
                 Monad<Optional<?>, Optional<T>, T>{
 
     public static final Monad.Util<Optional<?>> MONAD = OptionalMonad.INSTANCE;
 
     public static <CAT extends Monad<Optional<?>, CAT, T>, T> Optional<T> fromGeneric(CAT value) {
-        return Type.Equality.<Optional<?>, Optional<T>, CAT, T>obviousForConstructorApplication().cast(value);
+        return Type.Eq.<Optional<?>, Optional<T>, CAT, T>obviousForConstructorApplication().cast(value);
     }
 
     Optional(OptionalBase<T> value) {
          super(value);
-    }
-
-    @Override
-    public Optional<T> self() {
-        return this;
     }
 
     @Override
@@ -101,24 +95,24 @@ public class Optional<T> extends OptionalBase<T>
     }
 
     @Override
-    public <CAU extends Functor<Optional<?>, CAU, U>, U> Self<CAU> mapGeneric(Function<T, U> f) {
-        return map(f).<CAU>toGeneric();
+    public <CAU extends Functor<Optional<?>, CAU, U>, U> Type.App<Optional<?>, CAU, U> mapGeneric(Function<T, U> f) {
+        return map(f).toGeneric();
     }
 
     @Override
-    public <CAAU extends Monad<Optional<?>, CAAU, CAU>, CAU extends Monad<Optional<?>, CAU, U>, U> Self<CAU> flatMapGeneric(Function<T, CAU> f) {
+    public <CAAU extends Monad<Optional<?>, CAAU, CAU>, CAU extends Monad<Optional<?>, CAU, U>, U> Type.App<Optional<?>, CAU, U> flatMapGeneric(Function<T, CAU> f) {
         return flatMap((e) -> fromGeneric(f.apply(e))).<CAU>toGeneric();
     }
 
-    <CAT extends Type.ConstructorApplication<Optional<?>, CAT, T>> CAT toGeneric() {
-        return Type.Equality.<Optional<?>, CAT, Optional<T>, T>obviousForConstructorApplication().cast(this);
+    <CAT extends Type.App<Optional<?>, CAT, T>> Type.App<Optional<?>, CAT, T> toGeneric() {
+        return Type.Eq.<Optional<?>, CAT, Optional<T>, T>obviousForConstructorApplication().cast(this);
     }
 
     private enum OptionalMonad implements Monad.Util<Optional<?>> {
         INSTANCE;
 
         @Override
-        public <CAT extends Monad<Optional<?>, CAT, T>, T> Self<CAT> unit(T value) {
+        public <CAT extends Monad<Optional<?>, CAT, T>, T> Type.App<Optional<?>, CAT, T> unit(T value) {
             return Optional.present(value).<CAT>toGeneric();
         }
     }

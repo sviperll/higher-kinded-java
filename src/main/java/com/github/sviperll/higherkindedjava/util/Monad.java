@@ -29,7 +29,6 @@
  */
 package com.github.sviperll.higherkindedjava.util;
 
-import com.github.sviperll.higherkindedjava.util.generic.Self;
 import com.github.sviperll.higherkindedjava.util.generic.Type;
 import java.util.function.Function;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -37,19 +36,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  *
  * @author Victor Nazarov &lt;asviraspossible@gmail.com&gt;
+ * @param <CA>
+ * @param <CAT>
+ * @param <T>
  */
 @ParametersAreNonnullByDefault
 public interface Monad<CA extends Monad<CA, ? extends CA, ?>, CAT extends Monad<CA, CAT, T>, T>
         extends Functor<CA, CAT, T> {
     public Util<CA> monad();
 
-    default <CAAU extends Monad<CA, CAAU, CAU>, CAU extends Monad<CA, CAU, U>, U> Self<CAU> flatMapGeneric(Function<T, CAU> f) {
-        return monad().<CAAU, CAU, U>join(this.<CAAU, CAU>mapGeneric(f).self());
+    default <CAAU extends Monad<CA, CAAU, CAU>, CAU extends Monad<CA, CAU, U>, U> Type.App<CA, CAU, U> flatMapGeneric(Function<T, CAU> f) {
+        return monad().<CAAU, CAU, U>join(this.<CAAU, CAU>mapGeneric(f).castToType());
     }
 
     public interface Util<CA extends Monad<CA, ? extends CA, ?>> {
-        <CAT extends Monad<CA, CAT, T>, T> Self<CAT> unit(T value);
-        default <CAAT extends Monad<CA, CAAT, CAT>, CAT extends Monad<CA, CAT, T>, T> Self<CAT> join(CAAT values) {
+        <CAT extends Monad<CA, CAT, T>, T> Type.App<CA, CAT, T> unit(T value);
+        default <CAAT extends Monad<CA, CAAT, CAT>, CAT extends Monad<CA, CAT, T>, T> Type.App<CA, CAT, T> join(CAAT values) {
             return values.flatMapGeneric(Function.identity());
         }
     }
