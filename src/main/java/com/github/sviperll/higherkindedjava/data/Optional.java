@@ -5,16 +5,14 @@
  */
 package com.github.sviperll.higherkindedjava.data;
 
+import com.github.sviperll.higherkindedjava.ImplementsGeneratedTypeSupportInterface;
+
 /**
  *
  * @author vir
  */
-// @GenerateTypeSupport(GeneratedTypeSupportForOptional.class)
-// @GenerateDictionaryImplementation(
-//    dictionary=Functor.class,
-//    generate=OptionalFunctor.class)
-public interface Optional<T>
-        extends GeneratedTypeSupportForOptional<T> {
+@ImplementsGeneratedTypeSupportInterface(conversionToConcreteTypeMethod = "toAny")
+public interface Optional<T> extends GeneratedOptionalTypeSupport<T> {
     public static <T> EmptyOptional<T> empty() {
         return new EmptyOptional<T>();
     }
@@ -23,6 +21,9 @@ public interface Optional<T>
     }
     public static <T> PresentOptional<T> present(T value) {
         return new PresentOptional<>(value);
+    }
+    public static <T> AnyOptional<T> join(Optional<? extends Optional<T>> values) {
+        return values.toAny().flatMap(list -> list);
     }
 
     AnyOptional<T> toAny();

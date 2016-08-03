@@ -10,6 +10,7 @@ import java.util.function.Function;
 /**
  *
  * @author vir
+ * @param <T>
  */
 public class EmptyOptional<T> implements Optional<T> {
     private AnyOptional<T> any = null;

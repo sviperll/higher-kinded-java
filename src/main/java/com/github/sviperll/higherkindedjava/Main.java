@@ -7,8 +7,8 @@ package com.github.sviperll.higherkindedjava;
 
 import com.github.sviperll.higherkindedjava.data.AnyList;
 import com.github.sviperll.higherkindedjava.data.AnyOptional;
-import com.github.sviperll.higherkindedjava.data.ListFunctor;
-import com.github.sviperll.higherkindedjava.data.OptionalFunctor;
+import com.github.sviperll.higherkindedjava.data.ListMonad;
+import com.github.sviperll.higherkindedjava.data.OptionalMonad;
 import com.github.sviperll.higherkindedjava.data.List;
 import com.github.sviperll.higherkindedjava.data.Optional;
 
@@ -17,27 +17,37 @@ import com.github.sviperll.higherkindedjava.data.Optional;
  * @author vir
  */
 public class Main {
-    // Generic code
-    static <TT extends Type.Token> Type.App<TT, Integer> transform(Functor<TT> op, Type.App<TT, Integer> functor) {
-        return op.map(functor, i -> i + 1);
+    // Monad generic code
+    static <TT extends Type.UniqueToken> Type.App<TT, Integer> transformMonad(Monad<TT> monad, Type.App<TT, Integer> value) {
+        Type.App<TT, Integer> result = monad.flatMap(value, i -> monad.unit(5));
+        return transformFunctor(monad, result);
     }
 
-    // Type cast boilerplate
-    static <TT extends Type.Token> AnyList<Integer> processLists(ListFunctor<TT> op) {
-        Type.App<TT, Integer> functor = op.type().toTypeApp(List.prepend(1, List.empty()));
-        Type.App<TT, Integer> resultFunctor = transform(op, functor);
-        return op.type().toList(resultFunctor);
+    // Functor generic code
+    static <TT extends Type.UniqueToken> Type.App<TT, Integer> transformFunctor(Functor<TT> functor, Type.App<TT, Integer> value) {
+        return functor.map(value, i -> i + 1);
     }
 
-    // Type cast boilerplate
-    static <TT extends Type.Token> AnyOptional<Integer> processOptionals(OptionalFunctor<TT> op) {
-        Type.App<TT, Integer> functor = op.type().toTypeApp(Optional.present(1));
-        Type.App<TT, Integer> resultFunctor = transform(op, functor);
-        return op.type().toOptional(resultFunctor);
+    // Using specific instance
+    static <TT extends Type.UniqueToken> AnyList<Integer> processLists(ListMonad<TT> monad) {
+        Type.App<TT, Integer> value = monad.type().toTypeApp(List.prepend(1, List.empty()));
+        Type.App<TT, Integer> result = transformMonad(monad, value);
+        return monad.type().toList(result);
+    }
+
+    // Using specific instance
+    static <TT extends Type.UniqueToken> AnyOptional<Integer> processOptionals(OptionalMonad<TT> monad) {
+        Type.App<TT, Integer> value = monad.type().toTypeApp(Optional.present(1));
+        // Type.App<TT, Integer> value = Optional.present(1); // Compile-time error
+        // Type.App<TT, Integer> value = List.prepend(1, List.empty())); // Compile-time error
+        // Type.App<TT, Integer> value = monad.type().toTypeApp(List.prepend(1, List.empty())); // Compile-time error
+
+        Type.App<TT, Integer> result = transformMonad(monad, value);
+        return monad.type().toOptional(result);
     }
 
     public static void main(String[] args) {
-        System.out.println(processLists(ListFunctor.INSTANCE));
-        System.out.println(processOptionals(OptionalFunctor.INSTANCE));
+        System.out.println(processLists(ListMonad.INSTANCE));
+        System.out.println(processOptionals(OptionalMonad.INSTANCE));
     }
 }

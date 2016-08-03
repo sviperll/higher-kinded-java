@@ -12,10 +12,10 @@ import java.util.function.Function;
  *
  * @author vir
  */
-public class OptionalFunctor<TT extends Type.Token> implements com.github.sviperll.higherkindedjava.Functor<TT> {
-    public static final OptionalFunctor<?> INSTANCE = new OptionalFunctor<>(Optional.type);
+public class OptionalMonad<TT extends Type.UniqueToken> implements com.github.sviperll.higherkindedjava.Monad<TT> {
+    public static final OptionalMonad<?> INSTANCE = new OptionalMonad<>(Optional.type);
     private final Optional.Type<TT> type;
-    private OptionalFunctor(Optional.Type<TT> type) {
+    private OptionalMonad(Optional.Type<TT> type) {
         this.type = type;
     }
 
@@ -25,5 +25,15 @@ public class OptionalFunctor<TT extends Type.Token> implements com.github.sviper
     @Override
     public <T, R> Type.App<TT, R> map(Type.App<TT, T> self, Function<T, R> f) {
         return type.toTypeApp(type.toOptional(self).map(f));
+    }
+
+    @Override
+    public <T> Type.App<TT, T> unit(T value) {
+        return type.toTypeApp(Optional.present(value));
+    }
+
+    @Override
+    public <T, R> Type.App<TT, R> flatMap(Type.App<TT, T> self, Function<T, Type.App<TT, R>> f) {
+        return type.toTypeApp(type.toOptional(self).flatMap(value -> type.toOptional(f.apply(value))));
     }
 }

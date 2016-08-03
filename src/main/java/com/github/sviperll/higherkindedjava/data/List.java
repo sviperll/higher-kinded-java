@@ -5,17 +5,17 @@
  */
 package com.github.sviperll.higherkindedjava.data;
 
+import com.github.sviperll.higherkindedjava.ImplementsGeneratedTypeSupportInterface;
 import com.github.sviperll.higherkindedjava.Type;
+import java.util.function.Function;
 
 /**
  *
  * @author vir
+ * @param <T>
  */
-// @GenerateTypeSupport(GeneratedTypeSupportForList.class)
-// @GenerateDictionaryImplementation(
-//    dictionary=Functor.class,
-//    generate=ListFunctor.class)
-public interface List<T> extends GeneratedTypeSupportForList<T> {
+@ImplementsGeneratedTypeSupportInterface(conversionToConcreteTypeMethod = "toAny")
+public interface List<T> extends GeneratedListTypeSupport<T> {
     public static <T> PrependedList<T> unit(T value) {
         return new PrependedList<>(value, empty());
     }
@@ -24,6 +24,9 @@ public interface List<T> extends GeneratedTypeSupportForList<T> {
     }
     public static <T> EmptyList<T> empty() {
         return new EmptyList<>();
+    }
+    public static <T> AnyList<T> join(List<? extends List<T>> values) {
+        return values.toAny().flatMap(list -> list);
     }
 
     AnyList<T> toAny();

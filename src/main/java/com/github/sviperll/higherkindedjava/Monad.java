@@ -5,21 +5,20 @@
  */
 package com.github.sviperll.higherkindedjava;
 
-import com.github.sviperll.higherkindedjava.data.AnyList;
-import com.github.sviperll.higherkindedjava.data.AnyOptional;
-import com.github.sviperll.higherkindedjava.data.List;
-import com.github.sviperll.higherkindedjava.data.Optional;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
  *
  * @author vir
  */
-public interface Monad<TT extends Type.Token> extends Functor<TT> {
+public interface Monad<TT extends Type.UniqueToken> extends Functor<TT> {
     <T> Type.App<TT, T> unit(T value);
 
-    <T> Type.App<TT, T> join(Type.App<TT, Type.App<TT, T>> values);
+    default <T> Type.App<TT, T> join(Type.App<TT, Type.App<TT, T>> values) {
+        return flatMap(values, Function.identity());
+    }
 
-    <T, R> Type.App<TT, R> flatMap(Type.App<TT, T> self, Function<T, Type.App<TT, R>> f);
+    default <T, R> Type.App<TT, R> flatMap(Type.App<TT, T> self, Function<T, Type.App<TT, R>> f) {
+        return join(map(self, f));
+    }
 }

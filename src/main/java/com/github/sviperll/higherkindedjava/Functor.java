@@ -5,10 +5,6 @@
  */
 package com.github.sviperll.higherkindedjava;
 
-import com.github.sviperll.higherkindedjava.data.AnyList;
-import com.github.sviperll.higherkindedjava.data.AnyOptional;
-import com.github.sviperll.higherkindedjava.data.List;
-import com.github.sviperll.higherkindedjava.data.Optional;
 import java.util.function.Function;
 
 /**
@@ -17,6 +13,6 @@ import java.util.function.Function;
  * @param <TT>
  * @param <T>
  */
-public interface Functor<TT extends Type.Token> {
+public interface Functor<TT extends Type.UniqueToken> {
     <T, R> Type.App<TT, R> map(Type.App<TT, T> self, Function<T, R> f);
 }
