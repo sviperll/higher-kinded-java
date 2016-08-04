@@ -22,7 +22,7 @@ public interface GeneratedOptionalTypeSupport<T> extends Type.App<UniqueToken, T
     // This is the only instantiation of Optional.Type class
     // You can't instantiate it yourself since constructor is private.
     //
-    // Given instance's type contains wildcard.
+    // This instance's type contains wildcard.
     //
     // The only way to use type-information is to capture wildcard
     // thus effectively obtaining a unique type-level token.

@@ -15,6 +15,29 @@ import javax.annotation.Generated;
  */
 @Generated("") // Should be actually generated and not exposed to user
 public interface GeneratedListTypeSupport<T> extends App<UniqueToken, T> {
+    // This is the ultimate solution to all our problems
+    // WILDCARD!!!
+    //
+    // This is the only instantiation of List.Type class
+    // You can't instantiate it yourself since constructor is private.
+    //
+    // This instance's type contains wildcard.
+    //
+    // The only way to use type-information is to capture wildcard
+    // thus effectively obtaining a unique type-level token.
+    //
+    // This type-level token can be used to prove that type-casts are safe
+    //
+    // Rawtypes, manual instantiation of Type.App interface and plain old casts
+    // can all circumvernt type-safety and cause ClassCastException
+    // But all this features are expected to be inherently unsafe.
+    //
+    // Manual instantiation of Type.App interface can be made visibly unsafe
+    // we can provide add method like
+    //
+    //     void pleaseDoNotImplementMeItIsUnsafe();
+    //
+    // to make it obviously and visibly unsafe.
     public static Type<?> type = new Type<>();
 
     default void pleaseDoNotImplementMeItIsUnsafe() {
