@@ -18,36 +18,36 @@ import com.github.sviperll.higherkindedjava.data.Optional;
  */
 public class Main {
     // Monad generic code
-    static <TT extends Type.UniqueToken> Type.App<TT, Integer> transformMonad(Monad<TT> monad, Type.App<TT, Integer> value) {
-        Type.App<TT, Integer> result = monad.flatMap(value, i -> monad.unit(5));
+    static <M extends Type.Constructor> Type.App<M, Integer> transformMonad(Monad<M> monad, Type.App<M, Integer> value) {
+        Type.App<M, Integer> result = monad.flatMap(value, i -> monad.unit(5));
         return transformFunctor(monad, result);
     }
 
     // Functor generic code
-    static <TT extends Type.UniqueToken> Type.App<TT, Integer> transformFunctor(Functor<TT> functor, Type.App<TT, Integer> value) {
+    static <F extends Type.Constructor> Type.App<F, Integer> transformFunctor(Functor<F> functor, Type.App<F, Integer> value) {
         return functor.map(value, i -> i + 1);
     }
 
     // Using specific instance
-    static <TT extends Type.UniqueToken> AnyList<Integer> processLists(ListMonad<TT> monad) {
-        Type.App<TT, Integer> value = monad.type().toTypeApp(List.prepend(1, List.empty()));
-        Type.App<TT, Integer> result = transformMonad(monad, value);
-        return monad.type().toList(result);
+    static <L extends Type.Constructor> AnyList<Integer> processLists(List.TypeConstructor.Is<L> proof) {
+        Type.App<L, Integer> value = proof.convertToTypeApp(List.prepend(1, List.prepend(2, List.empty())));
+        Type.App<L, Integer> result = transformMonad(new ListMonad<>(proof), value);
+        return proof.convertToList(result);
     }
 
     // Using specific instance
-    static <TT extends Type.UniqueToken> AnyOptional<Integer> processOptionals(OptionalMonad<TT> monad) {
-        Type.App<TT, Integer> value = monad.type().toTypeApp(Optional.present(1));
+    static <O extends Type.Constructor> AnyOptional<Integer> processOptionals(Optional.TypeConstructor.Is<O> proof) {
+        Type.App<O, Integer> value = proof.convertToTypeApp(Optional.present(1));
         // Type.App<TT, Integer> value = Optional.present(1); // Compile-time error
         // Type.App<TT, Integer> value = List.prepend(1, List.empty())); // Compile-time error
-        // Type.App<TT, Integer> value = monad.type().toTypeApp(List.prepend(1, List.empty())); // Compile-time error
+        // Type.App<TT, Integer> value = proof.convertToTypeApp(List.prepend(1, List.empty())); // Compile-time error
 
-        Type.App<TT, Integer> result = transformMonad(monad, value);
-        return monad.type().toOptional(result);
+        Type.App<O, Integer> result = transformMonad(new OptionalMonad<>(proof), value);
+        return proof.convertToOptional(result);
     }
 
     public static void main(String[] args) {
-        System.out.println(processLists(ListMonad.INSTANCE));
-        System.out.println(processOptionals(OptionalMonad.INSTANCE));
+        System.out.println(processLists(List.TypeConstructor.get));
+        System.out.println(processOptionals(Optional.TypeConstructor.get));
     }
 }

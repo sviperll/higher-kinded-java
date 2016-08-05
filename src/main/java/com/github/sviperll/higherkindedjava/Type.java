@@ -22,7 +22,7 @@ public class Type {
      * Manual implementation of com.github.sviperll.higherkindedjava.Type.App interface
      * is a high risk of circumventing type safety guarantees provided by usage of this interface.
      */
-    public interface App<TT extends UniqueToken, T> {
+    public interface App<TT extends Constructor, T> {
         /**
          * Please, do not manually implement.
          *
@@ -46,7 +46,7 @@ public class Type {
         }
 
         @SuppressWarnings("unchecked")
-        public static <TT extends UniqueToken, T, U> Eq<T, U> fromTypeApp(Eq<Type.App<TT, T>, Type.App<TT, U>> equality) {
+        public static <TT extends Constructor, T, U> Eq<T, U> fromTypeApp(Eq<Type.App<TT, T>, Type.App<TT, U>> equality) {
             return INSTANCE;
         }
 
@@ -68,12 +68,13 @@ public class Type {
         }
 
         @SuppressWarnings("unchecked")
-        public <TT extends UniqueToken> Eq<Type.App<TT, T>, Type.App<TT, U>> toTypeApp() {
+        public <TT extends Constructor> Eq<Type.App<TT, T>, Type.App<TT, U>> toTypeApp() {
             return INSTANCE;
         }
     }
-    public static class UniqueToken {
-        private UniqueToken() {
+    public static class Constructor {
+        private Constructor() {
+            throw new IllegalStateException("Shouldn't be instantiated");
         }
     }
 }

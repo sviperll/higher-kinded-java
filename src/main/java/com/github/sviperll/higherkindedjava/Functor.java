@@ -13,6 +13,6 @@ import java.util.function.Function;
  * @param <TT>
  * @param <T>
  */
-public interface Functor<TT extends Type.UniqueToken> {
+public interface Functor<TT extends Type.Constructor> {
     <T, R> Type.App<TT, R> map(Type.App<TT, T> self, Function<T, R> f);
 }

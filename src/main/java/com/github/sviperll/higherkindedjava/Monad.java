@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @author vir
  */
-public interface Monad<TT extends Type.UniqueToken> extends Functor<TT> {
+public interface Monad<TT extends Type.Constructor> extends Functor<TT> {
     <T> Type.App<TT, T> unit(T value);
 
     default <T> Type.App<TT, T> join(Type.App<TT, Type.App<TT, T>> values) {
