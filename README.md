@@ -1,7 +1,8 @@
 I've been experimenting with different encodings and I've come up with some new scheme with the ergonomics I mostly like.
 It is currently presented in [higher-kinded-java repository](https://github.com/sviperll/higher-kinded-java)
 
-Basically It's a highj encoding, but with existential type twist.
+Basically it's a [highj](https://github.com/highj/highj) encoding,
+but with existential type twist.
 You can get a taste of using it as a library by looking at the
 [Main.java source code](https://github.com/sviperll/higher-kinded-java/blob/master/src/main/java/com/github/sviperll/higherkindedjava/Main.java)
 .
