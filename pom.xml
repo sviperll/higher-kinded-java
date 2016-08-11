@@ -11,4 +11,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <name>higher-kinded-java</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.sviperll</groupId>
+            <artifactId>writejava4me</artifactId>
+            <version>0.3</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -22,7 +22,10 @@ public class Type {
      * Manual implementation of com.github.sviperll.higherkindedjava.Type.App interface
      * is a high risk of circumventing type safety guarantees provided by usage of this interface.
      */
-    public interface App<TT extends Constructor, T> {
+    public static abstract class App<TT extends Constructor, T> {
+        protected App() {
+            pleaseDoNotOverrideMeItIsUnsafe();
+        }
         /**
          * Please, do not manually implement.
          *
@@ -30,7 +33,11 @@ public class Type {
          * Manual implementation of com.github.sviperll.higherkindedjava.Type.App interface
          * is a high risk of circumventing type safety guarantees provided by usage of this interface.
          */
-        void pleaseDoNotImplementMeItIsUnsafe();
+        protected abstract void pleaseDoNotImplementMeItIsUnsafe();
+
+        protected void pleaseDoNotOverrideMeItIsUnsafe() {
+            throw new AssertionError("Attempt to manually implement com.github.sviperll.higherkindedjava.Type.App interface. Please don't do this. It is unsafe!");
+        }
     }
 
     /**
@@ -53,8 +60,9 @@ public class Type {
         private Eq() {
         }
 
-        public U cast(T type) {
-            return (U)type;
+        @SuppressWarnings("unchecked")
+        public T cast(U type) {
+            return (T)type;
         }
 
         @SuppressWarnings("unchecked")

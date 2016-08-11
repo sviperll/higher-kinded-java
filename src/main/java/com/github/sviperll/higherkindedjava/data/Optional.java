@@ -5,14 +5,14 @@
  */
 package com.github.sviperll.higherkindedjava.data;
 
-import com.github.sviperll.higherkindedjava.ImplementsGeneratedTypeSupportInterface;
+import com.github.sviperll.higherkindedjava.GenerateTypeConstructor;
 
 /**
  *
  * @author vir
  */
-@ImplementsGeneratedTypeSupportInterface(conversionToConcreteTypeMethod = "toAny")
-public interface Optional<T> extends GeneratedOptionalTypeSupport<T> {
+@GenerateTypeConstructor
+public interface Optional<T> {
     public static <T> EmptyOptional<T> empty() {
         return new EmptyOptional<T>();
     }

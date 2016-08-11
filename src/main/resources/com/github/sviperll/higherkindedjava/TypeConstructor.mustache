@@ -1,0 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package {{package}};
+
+import com.github.sviperll.higherkindedjava.Type;
+
+public class {{class}} {
+    public static final Is<?> get = new Is<>();
+    {{class}}() {
+    }
+    public static class Is<TC extends Type.Constructor> {
+        private Is() {
+        }
+        public <T> Type.App<TC, T> convertToTypeApp({{annotated}}<T> value) {
+            return new TypeApp<>(value);
+        }
+        public <T> {{annotated}}<T> convertTo{{annotated}}(Type.App<TC, T> value) {
+            return ((TypeApp<TC, T>)value).value;
+        }
+        private static class TypeApp<TC extends Type.Constructor, T> extends Type.App<TC, T> {
+            private final {{annotated}}<T> value;
+            private TypeApp({{annotated}}<T> value) {
+                this.value = value;
+            }
+            @Override
+            public void pleaseDoNotImplementMeItIsUnsafe() {
+            }
+            @Override
+            public void pleaseDoNotOverrideMeItIsUnsafe() {
+            }
+        }
+    }
+}
+

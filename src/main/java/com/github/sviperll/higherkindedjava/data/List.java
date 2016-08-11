@@ -5,17 +5,15 @@
  */
 package com.github.sviperll.higherkindedjava.data;
 
-import com.github.sviperll.higherkindedjava.ImplementsGeneratedTypeSupportInterface;
-import com.github.sviperll.higherkindedjava.Type;
-import java.util.function.Function;
+import com.github.sviperll.higherkindedjava.GenerateTypeConstructor;
 
 /**
  *
  * @author vir
  * @param <T>
  */
-@ImplementsGeneratedTypeSupportInterface(conversionToConcreteTypeMethod = "toAny")
-public interface List<T> extends GeneratedListTypeSupport<T> {
+@GenerateTypeConstructor
+public interface List<T> {
     public static <T> PrependedList<T> unit(T value) {
         return new PrependedList<>(value, empty());
     }
