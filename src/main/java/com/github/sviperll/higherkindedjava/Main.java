@@ -57,7 +57,7 @@ public class Main {
         GADT<Integer> one = GADT.succ(zero);
         GADT<Function<Integer, Integer>> f1 = GADT.lam(n -> zero);
         GADT<Function<Integer, Integer>> f2 = GADT.lam(n -> one);
-
-        System.out.println(GADT.app(GADT.ifClause(GADT.isZero(one), f1, f2), one).eval());
+        GADT<Integer> exp = GADT.app(GADT.ifClause(GADT.isZero(one), f1, f2), one);
+        System.out.println(exp + " = " + exp.eval());
     }
 }

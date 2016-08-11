@@ -89,6 +89,42 @@ public abstract class GADT<T> {
         });
     };
 
+    @Override
+    public String toString() {
+        return accept(new GADTVisitor<T, String>() {
+
+            @Override
+            public String zero(Type.Eq<T, Integer> tArgKnowledge) {
+                return "0";
+            }
+
+            @Override
+            public String succ(GADT<Integer> value, Type.Eq<T, Integer> tArgKnowledge) {
+                return value.toString() + " + 1";
+            }
+
+            @Override
+            public String isZero(GADT<Integer> value, Type.Eq<T, Boolean> tArgKnowledge) {
+                return "isZero(" + value.toString() + ")";
+            }
+
+            @Override
+            public String ifClause(GADT<Boolean> condition, GADT<T> thenValue, GADT<T> elseValue) {
+                return "(if " + condition.toString() + " then " + thenValue.toString() + " else " + elseValue.toString() + ")";
+            }
+
+            @Override
+            public <U, W> String lam(Function<U, GADT<W>> function, Type.Eq<T, Function<U, W>> tArgKnowledge) {
+                return "<#function>";
+            }
+
+            @Override
+            public <U> String app(GADT<Function<U, T>> function, GADT<U> argument) {
+                return function.toString() + "(" + argument.toString() + ")";
+            }
+        });
+    };
+
     public GADT<T> cloneAsGADT() {
         return cloneAsGADT(GADTTypeConstructor.get);
     }
