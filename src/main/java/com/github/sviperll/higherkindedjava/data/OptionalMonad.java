@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @author vir
  */
 public class OptionalMonad<TT extends Type.Constructor> implements com.github.sviperll.higherkindedjava.Monad<TT> {
-    public static final OptionalMonad<?> INSTANCE = new OptionalMonad<>(OptionalTypeConstructor.get);
+    public static final OptionalMonad<?> INSTANCE = new OptionalMonad<>(OptionalTypeConstructor.GET);
     private final OptionalTypeConstructor.Is<TT> tyConstrKnowledge;
     public OptionalMonad(OptionalTypeConstructor.Is<TT> tyConstrKnowledge) {
         this.tyConstrKnowledge = tyConstrKnowledge;

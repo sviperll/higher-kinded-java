@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @author vir
  */
 public class ListMonad<TT extends Type.Constructor> implements com.github.sviperll.higherkindedjava.Monad<TT> {
-    public static final ListMonad<?> INSTANCE = new ListMonad<>(ListTypeConstructor.get);
+    public static final ListMonad<?> INSTANCE = new ListMonad<>(ListTypeConstructor.GET);
     private final ListTypeConstructor.Is<TT> tyConstrKnowledge;
     public ListMonad(ListTypeConstructor.Is<TT> tyConstrKnowledge) {
         this.tyConstrKnowledge = tyConstrKnowledge;

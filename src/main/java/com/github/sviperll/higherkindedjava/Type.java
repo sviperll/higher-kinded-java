@@ -5,6 +5,8 @@
  */
 package com.github.sviperll.higherkindedjava;
 
+import java.util.Objects;
+
 /**
  *
  * @author vir
@@ -13,30 +15,37 @@ public class Type {
     private Type() {
     }
 
-    /**
-     * Type application.
-     *
-     * Please, do not manually implement.
-     *
-     * Do not implement com.github.sviperll.higherkindedjava.Type.App interface.
-     * Manual implementation of com.github.sviperll.higherkindedjava.Type.App interface
-     * is a high risk of circumventing type safety guarantees provided by usage of this interface.
-     */
-    public static abstract class App<TT extends Constructor, T> {
-        protected App() {
-            pleaseDoNotOverrideMeItIsUnsafe();
-        }
-        /**
-         * Please, do not manually implement.
-         *
-         * Do not implement com.github.sviperll.higherkindedjava.Type.App interface.
-         * Manual implementation of com.github.sviperll.higherkindedjava.Type.App interface
-         * is a high risk of circumventing type safety guarantees provided by usage of this interface.
-         */
-        protected abstract void pleaseDoNotImplementMeItIsUnsafe();
+    public static class App<TT extends Constructor, T> {
 
-        protected void pleaseDoNotOverrideMeItIsUnsafe() {
-            throw new AssertionError("Attempt to manually implement com.github.sviperll.higherkindedjava.Type.App interface. Please don't do this. It is unsafe!");
+        private final Object value;
+        private <V> App(V value) {
+            this.value = value;
+        }
+    }
+
+    public static class ConstructorIs<TC extends Constructor> {
+        public static final Support<?> SUPPORT = new Support<>();
+        private final Support<TC> support;
+        public ConstructorIs(Support<TC> support) {
+            Objects.requireNonNull(support);
+            this.support = support;
+        }
+        protected <V, T> Type.App<TC, T> unsafeConvertToTypeApp(V value) {
+            return support.<V, T>unsafeConvertToTypeApp(value);
+        }
+        protected <V, T> V unsafeConvertToValue(Type.App<TC, T> value) {
+            return support.<V, T>unsafeConvertToValue(value);
+        }
+        public static class Support<TC extends Constructor> {
+            private Support() {
+            }
+            private <V, T> Type.App<TC, T> unsafeConvertToTypeApp(V value) {
+                return new Type.App<>(value);
+            }
+            @SuppressWarnings("unchecked")
+            private <V, T> V unsafeConvertToValue(Type.App<TC, T> value) {
+                return (V)value.value;
+            }
         }
     }
 
@@ -44,7 +53,7 @@ public class Type {
      * Reified type-equality
      */
     public static class Eq<T, U> {
-        @SuppressWarnings("rawtyopes")
+        @SuppressWarnings("rawtypes")
         private static final Eq INSTANCE = new Eq();
 
         @SuppressWarnings("unchecked")

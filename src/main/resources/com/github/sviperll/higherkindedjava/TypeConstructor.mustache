@@ -9,29 +9,18 @@ package {{package}};
 import com.github.sviperll.higherkindedjava.Type;
 
 public class {{class}} {
-    public static final Is<?> get = new Is<>();
+    public static final Is<?> GET = new Is<>(Type.ConstructorIs.SUPPORT);
     {{class}}() {
     }
-    public static class Is<TC extends Type.Constructor> {
-        private Is() {
+    public static class Is<TC extends Type.Constructor> extends Type.ConstructorIs<TC> {
+        private Is(Type.ConstructorIs.Support<TC> support) {
+            super(support);
         }
         public <T> Type.App<TC, T> convertToTypeApp({{annotated}}<T> value) {
-            return new TypeApp<>(value);
+            return this.<{{annotated}}<T>, T>unsafeConvertToTypeApp(value);
         }
         public <T> {{annotated}}<T> convertTo{{annotated}}(Type.App<TC, T> value) {
-            return ((TypeApp<TC, T>)value).value;
-        }
-        private static class TypeApp<TC extends Type.Constructor, T> extends Type.App<TC, T> {
-            private final {{annotated}}<T> value;
-            private TypeApp({{annotated}}<T> value) {
-                this.value = value;
-            }
-            @Override
-            public void pleaseDoNotImplementMeItIsUnsafe() {
-            }
-            @Override
-            public void pleaseDoNotOverrideMeItIsUnsafe() {
-            }
+            return this.<{{annotated}}<T>, T>unsafeConvertToValue(value);
         }
     }
 }

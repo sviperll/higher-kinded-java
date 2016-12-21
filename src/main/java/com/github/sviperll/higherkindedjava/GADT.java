@@ -126,7 +126,7 @@ public abstract class GADT<T> {
     };
 
     public GADT<T> cloneAsGADT() {
-        return cloneAsGADT(GADTTypeConstructor.get);
+        return cloneAsGADT(GADTTypeConstructor.GET);
     }
 
     private <TC extends Type.Constructor> GADT<T> cloneAsGADT(GADTTypeConstructor.Is<TC> tyConstrKnowledge) {

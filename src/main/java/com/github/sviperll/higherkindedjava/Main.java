@@ -50,8 +50,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println(processLists(ListTypeConstructor.get));
-        System.out.println(processOptionals(OptionalTypeConstructor.get));
+        System.out.println(processLists(ListTypeConstructor.GET));
+        System.out.println(processOptionals(OptionalTypeConstructor.GET));
 
         GADT<Integer> zero = GADT.zero();
         GADT<Integer> one = GADT.succ(zero);
